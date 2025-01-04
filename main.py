@@ -1,14 +1,17 @@
+import logging
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.action_chains import ActionChains
 from bs4 import BeautifulSoup
 import time
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 from dotenv import load_dotenv
 import os
+
+# Set up logging
+logging.basicConfig(filename='app.log', filemode='w', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Load environment variables from .env file
 load_dotenv()
@@ -25,6 +28,7 @@ driver = webdriver.Chrome(service=service, options=chrome_options)
 try:
     # Load the page
     driver.get(url)
+    logging.info('Page loaded successfully')
     time.sleep(5)  # Wait for the page to load completely
 
     # Scroll to load more tracks, limited to 10 iterations
@@ -38,26 +42,28 @@ try:
             break
         last_height = new_height
         iterations += 1
+        logging.info(f'Iteration {iterations}: Scrolled to bottom of page')
 
     # Get the page source and parse it with BeautifulSoup
     page_source = driver.page_source
     soup = BeautifulSoup(page_source, 'html.parser')
+    logging.info('Page source parsed with BeautifulSoup')
 
-    # # Write the complete response to a file for debugging
-    # with open('response.html', 'w', encoding='utf-8') as file:
-    #     file.write(page_source)
-    # print("Response written to response.html")
+    # Write the complete response to a file for debugging
+    with open('response.html', 'w', encoding='utf-8') as file:
+        file.write(page_source)
+    logging.info('Response written to response.html')
 
     # Find all track elements (adjust the selector based on the actual HTML structure)
     tracks = soup.find_all('div', class_='media-row')  # Replace 'div' and 'track' with actual tags/classes
-    print(f"Found {len(tracks)} tracks")
+    logging.info(f"Found {len(tracks)} tracks")
 
-    # # Write the tracks object to a file for debugging
-    # with open('tracks_debug.txt', 'w', encoding='utf-8') as file:
-    #     for track in tracks:
-    #         file.write(str(track))
-    #         file.write('\n\n')
-    # print("Tracks written to tracks_debug.txt")
+    # Write the tracks object to a file for debugging
+    with open('tracks_debug.txt', 'w', encoding='utf-8') as file:
+        for track in tracks:
+            file.write(str(track))
+            file.write('\n\n')
+    logging.info("Tracks written to tracks_debug.txt")
 
     # Extract and write track information to file
     track_queries = []
@@ -75,11 +81,13 @@ try:
                 track_queries.append(search_query)
             else:
                 file.write("Title or artist not found for a track\n")
+    logging.info("Track information extracted and written to tracks.txt")
 
 except Exception as e:
-    print(f'Failed to retrieve content. Error: {e}')
+    logging.error(f'Failed to retrieve content. Error: {e}')
 finally:
     driver.quit()
+    logging.info('Driver quit')
 
 """
 # Spotify credentials
@@ -122,7 +130,7 @@ for query in track_queries:
 
 if track_ids:
     sp.user_playlist_add_tracks(user_id, playlist_id, track_ids)
-    print(f"Added {len(track_ids)} tracks to the playlist.")
+    logging.info(f"Added {len(track_ids)} tracks to the playlist.")
 else:
-    print("No tracks found to add to the playlist.")
+    logging.info("No tracks found to add to the playlist.")
 """
