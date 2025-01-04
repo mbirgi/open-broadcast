@@ -1,13 +1,10 @@
 import logging
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
 import time
-from spotipy.oauth2 import SpotifyOAuth
 from dotenv import load_dotenv
-import os
 
 # Set up logging
 logging.basicConfig(filename='app.log', filemode='a', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
