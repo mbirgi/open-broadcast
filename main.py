@@ -30,7 +30,7 @@ try:
     # Scroll to load more tracks, limited to 10 iterations
     last_height = driver.execute_script("return document.body.scrollHeight")
     iterations = 0
-    while iterations < 10:
+    while iterations < 20:
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         time.sleep(5)  # Wait for new tracks to load
         new_height = driver.execute_script("return document.body.scrollHeight")
@@ -43,21 +43,21 @@ try:
     page_source = driver.page_source
     soup = BeautifulSoup(page_source, 'html.parser')
 
-    # Write the complete response to a file for debugging
-    with open('response.html', 'w', encoding='utf-8') as file:
-        file.write(page_source)
-    print("Response written to response.html")
+    # # Write the complete response to a file for debugging
+    # with open('response.html', 'w', encoding='utf-8') as file:
+    #     file.write(page_source)
+    # print("Response written to response.html")
 
     # Find all track elements (adjust the selector based on the actual HTML structure)
     tracks = soup.find_all('div', class_='media-row')  # Replace 'div' and 'track' with actual tags/classes
     print(f"Found {len(tracks)} tracks")
 
-    # Write the tracks object to a file for debugging
-    with open('tracks_debug.txt', 'w', encoding='utf-8') as file:
-        for track in tracks:
-            file.write(str(track))
-            file.write('\n\n')
-    print("Tracks written to tracks_debug.txt")
+    # # Write the tracks object to a file for debugging
+    # with open('tracks_debug.txt', 'w', encoding='utf-8') as file:
+    #     for track in tracks:
+    #         file.write(str(track))
+    #         file.write('\n\n')
+    # print("Tracks written to tracks_debug.txt")
 
     # Extract and write track information to file
     track_queries = []
