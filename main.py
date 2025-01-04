@@ -1,13 +1,23 @@
 import logging
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
 import time
+import spotipy
+from spotipy.oauth2 import SpotifyOAuth
 from dotenv import load_dotenv
+import os
 
 # Set up logging
 logging.basicConfig(filename='app.log', filemode='a', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+# Script name
+script_name = 'main.py'
+
+# Log the start of the script
+logging.info(f'**** {script_name} started ****')
 
 # Load environment variables from .env file
 load_dotenv()
@@ -22,8 +32,6 @@ service = Service('/opt/homebrew/bin/chromedriver')  # Path to chromedriver
 driver = webdriver.Chrome(service=service, options=chrome_options)
 
 try:
-    logging.info('**** Script started ****')  # Log the start of the script
-
     # Load the page
     driver.get(url)
     logging.info('Page loaded successfully')
@@ -47,21 +55,9 @@ try:
     soup = BeautifulSoup(page_source, 'html.parser')
     logging.info('Page source parsed with BeautifulSoup')
 
-    # Write the complete response to a file for debugging
-    with open('response.html', 'w', encoding='utf-8') as file:
-        file.write(page_source)
-    logging.info('Response written to response.html')
-
     # Find all track elements (adjust the selector based on the actual HTML structure)
     tracks = soup.find_all('div', class_='media-row')  # Replace 'div' and 'track' with actual tags/classes
     logging.info(f"Found {len(tracks)} tracks")
-
-    # Write the tracks object to a file for debugging
-    with open('tracks_debug.txt', 'w', encoding='utf-8') as file:
-        for track in tracks:
-            file.write(str(track))
-            file.write('\n\n')
-    logging.info("Tracks written to tracks_debug.txt")
 
     # Extract and write track information to file
     track_queries = []
@@ -86,5 +82,4 @@ except Exception as e:
 finally:
     driver.quit()
     logging.info('Driver quit')
-    logging.info('**** Script ended ****')  # Log the end of the script
-
+    logging.info(f'**** {script_name} ended ****')  # Log the end of the script
