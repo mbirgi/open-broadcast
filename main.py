@@ -26,6 +26,8 @@ service = Service('/opt/homebrew/bin/chromedriver')  # Path to chromedriver
 driver = webdriver.Chrome(service=service, options=chrome_options)
 
 try:
+    logging.info('**** Script started ****')  # Log the start of the script
+
     # Load the page
     driver.get(url)
     logging.info('Page loaded successfully')
@@ -34,7 +36,7 @@ try:
     # Scroll to load more tracks, limited to 10 iterations
     last_height = driver.execute_script("return document.body.scrollHeight")
     iterations = 0
-    while iterations < 20:
+    while iterations < 10:
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         time.sleep(5)  # Wait for new tracks to load
         new_height = driver.execute_script("return document.body.scrollHeight")
@@ -88,6 +90,7 @@ except Exception as e:
 finally:
     driver.quit()
     logging.info('Driver quit')
+    logging.info('**** Script ended ****')  # Log the end of the script
 
 """
 # Spotify credentials
