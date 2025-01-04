@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.action_chains import ActionChains
 from bs4 import BeautifulSoup
 import time
 import spotipy
@@ -26,6 +27,18 @@ try:
     driver.get(url)
     time.sleep(5)  # Wait for the page to load completely
 
+    # Scroll to load more tracks, limited to 10 iterations
+    last_height = driver.execute_script("return document.body.scrollHeight")
+    iterations = 0
+    while iterations < 10:
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(5)  # Wait for new tracks to load
+        new_height = driver.execute_script("return document.body.scrollHeight")
+        if new_height == last_height:
+            break
+        last_height = new_height
+        iterations += 1
+
     # Get the page source and parse it with BeautifulSoup
     page_source = driver.page_source
     soup = BeautifulSoup(page_source, 'html.parser')
@@ -46,27 +59,29 @@ try:
             file.write('\n\n')
     print("Tracks written to tracks_debug.txt")
 
-    # Extract and print track information
+    # Extract and write track information to file
     track_queries = []
     with open('tracks.txt', 'w') as file:
         for track in tracks:
+            if len(track_queries) >= 200:
+                break
             title_tag = track.find('div', class_='name').find('a')
             artist_tag = track.find('a', class_='artist__name')
             if title_tag and artist_tag:
                 title = title_tag.text.strip()
                 artist = artist_tag.text.strip()
                 search_query = f"track:{title} artist:{artist}"
-                print(search_query)
                 file.write(search_query + '\n')
                 track_queries.append(search_query)
             else:
-                print("Title or artist not found for a track")
+                file.write("Title or artist not found for a track\n")
 
 except Exception as e:
     print(f'Failed to retrieve content. Error: {e}')
 finally:
     driver.quit()
 
+"""
 # Spotify credentials
 sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
     client_id=os.getenv('SPOTIPY_CLIENT_ID'),
@@ -101,16 +116,13 @@ for query in track_queries:
             for item in result['tracks']['items']:
                 track_id = item['id']
                 track_ids.append(track_id)
-                if len(track_ids) >= 200:
-                    break
             offset += 50
         else:
             break
-        if len(track_ids) >= 200:
-            break
 
 if track_ids:
-    sp.user_playlist_add_tracks(user_id, playlist_id, track_ids[:200])
-    print(f"Added {len(track_ids[:200])} tracks to the playlist.")
+    sp.user_playlist_add_tracks(user_id, playlist_id, track_ids)
+    print(f"Added {len(track_ids)} tracks to the playlist.")
 else:
     print("No tracks found to add to the playlist.")
+"""
