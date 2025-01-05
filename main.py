@@ -76,7 +76,7 @@ try:
     soup = BeautifulSoup(page_source, "html.parser")
     logging.info("Page source parsed with BeautifulSoup")
 
-    # Find all track elements
+    # Find all track elements (adjust the selector based on the actual HTML structure)
     tracks = soup.find_all(
         "div", class_="media-row"
     )  # Replace 'div' and 'track' with actual tags/classes
@@ -86,8 +86,6 @@ try:
     track_queries = []
     with open("tracks.txt", "w") as file:
         for track in tracks:
-            if len(track_queries) >= 200:
-                break
             title_tag = track.find("div", class_="name").find("a")
             artist_tag = track.find("a", class_="artist__name")
             if title_tag and artist_tag:
