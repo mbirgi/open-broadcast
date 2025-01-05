@@ -47,10 +47,10 @@ try:
     logging.info('Page loaded successfully')
     time.sleep(5)  # Wait for the page to load completely
 
-    # Scroll to load more tracks, limited to 10 iterations
+    # Scroll to load more tracks until the end of the page
     last_height = driver.execute_script("return document.body.scrollHeight")
     iterations = 0
-    while iterations < 10:
+    while True:
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         time.sleep(5)  # Wait for new tracks to load
         new_height = driver.execute_script("return document.body.scrollHeight")
