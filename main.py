@@ -52,14 +52,14 @@ def scrape_tracks():
         attempts = 0
         while attempts < max_attempts:
             page.evaluate("window.scrollTo(0, document.body.scrollHeight);")
-            page.wait_for_timeout(5000)  # Wait for new tracks to load
+            page.wait_for_timeout(10000)  # Wait for new tracks to load
             new_height = page.evaluate("document.body.scrollHeight")
             if new_height == last_height:
                 attempts += 1
                 logging.info(f"No new content loaded. Attempt {attempts}/{max_attempts}")
             else:
                 attempts = 0
-                logging.info(f"New content loaded. Resetting attempts.")
+                # logging.info(f"New content loaded. Resetting attempts.")
             last_height = new_height
             iterations += 1
             logging.info(
