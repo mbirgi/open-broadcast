@@ -6,7 +6,8 @@ This Python script scrapes track information from the Open Broadcast website and
 - Scrapes track titles and artist names from the Open Broadcast website.
 - Checks if a Spotify playlist with the specified name already exists.
 - Creates a new Spotify playlist if it doesn't exist.
-- Adds up to 200 tracks to the Spotify playlist.
+- Clears the existing playlist before adding new tracks.
+- Adds all found tracks to the Spotify playlist without a limit.
 
 ## Requirements
 - Python 3.x
