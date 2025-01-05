@@ -45,6 +45,10 @@ if not playlist_id:
     playlist = sp.user_playlist_create(user_id, playlist_name, public=True)
     playlist_id = playlist['id']
     logging.info(f'Created new playlist: {playlist_name} (ID: {playlist_id})')
+else:
+    # Clear the existing playlist
+    sp.user_playlist_replace_tracks(user_id, playlist_id, [])
+    logging.info(f'Cleared existing playlist: {playlist_name} (ID: {playlist_id})')
 
 # Read track queries from file
 track_queries = []
@@ -69,10 +73,9 @@ for query in track_queries:
     while True:
         result = retry_request(sp.search, q=query.strip(), type='track', limit=50, offset=offset)
         if result['tracks']['items']:
-            for item in result['tracks']['items']:
-                track_id = item['id']
-                track_ids.append(track_id)
-            offset += 50
+            track_id = result['tracks']['items'][0]['id']
+            track_ids.append(track_id)
+            break  # Only add the first found track for each query
         else:
             break
 logging.info(f'Found {len(track_ids)} track IDs')
