@@ -76,7 +76,7 @@ try:
     soup = BeautifulSoup(page_source, "html.parser")
     logging.info("Page source parsed with BeautifulSoup")
 
-    # Find all track elements (adjust the selector based on the actual HTML structure)
+    # Find all track elements
     tracks = soup.find_all(
         "div", class_="media-row"
     )  # Replace 'div' and 'track' with actual tags/classes
