@@ -6,7 +6,12 @@ from dotenv import load_dotenv
 import time
 
 # Set up logging
-logging.basicConfig(filename='app.log', filemode='a', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(
+    filename='app.log',
+    filemode='a',
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
 
 # Script name
 script_name = 'make-playlist.py'
@@ -69,14 +74,17 @@ def retry_request(func, *args, retries=3, delay=5, **kwargs):
 # Search for tracks and add them to the playlist
 track_ids = []
 for query in track_queries:
+    logging.info(f'Searching for track: {query.strip()}')
     offset = 0
     while True:
         result = retry_request(sp.search, q=query.strip(), type='track', limit=50, offset=offset)
         if result['tracks']['items']:
             track_id = result['tracks']['items'][0]['id']
             track_ids.append(track_id)
+            logging.info(f'Found track ID: {track_id} for query: {query.strip()}')
             break  # Only add the first found track for each query
         else:
+            logging.info(f'No tracks found for query: {query.strip()}')
             break
 logging.info(f'Found {len(track_ids)} track IDs')
 
