@@ -60,7 +60,7 @@ try:
         driver.execute_script(
             "window.scrollTo(0, document.body.scrollHeight);"
         )
-        time.sleep(5)  # Wait for new tracks to load
+        time.sleep(10)  # Wait for new tracks to load
         new_height = driver.execute_script(
             "return document.body.scrollHeight"
         )
