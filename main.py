@@ -62,7 +62,7 @@ try:
             break
         last_height = new_height
         iterations += 1
-        logging.info(f'Iteration {iterations}: Scrolled to bottom of page')
+        logging.info(f'Iteration {iterations}: Scrolled to bottom of page, current height: {new_height}')
 
     # Get the page source and parse it with BeautifulSoup
     page_source = driver.page_source
