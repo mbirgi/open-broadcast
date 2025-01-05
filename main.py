@@ -54,7 +54,9 @@ try:
     # Scroll to load more tracks until the end of the page
     last_height = driver.execute_script("return document.body.scrollHeight")
     iterations = 0
-    while True:
+    max_attempts = 5
+    attempts = 0
+    while attempts < max_attempts:
         driver.execute_script(
             "window.scrollTo(0, document.body.scrollHeight);"
         )
@@ -63,7 +65,9 @@ try:
             "return document.body.scrollHeight"
         )
         if new_height == last_height:
-            break
+            attempts += 1
+        else:
+            attempts = 0
         last_height = new_height
         iterations += 1
         logging.info(
