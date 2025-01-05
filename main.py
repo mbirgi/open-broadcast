@@ -1,9 +1,8 @@
 """
 This script scrapes track information from the Open Broadcast website and
-creates a Spotify playlist with the retrieved tracks. It uses Selenium to
-load and parse the webpage, BeautifulSoup to extract track details, and
-Spotipy to interact with the Spotify API. The script logs its progress and
-any errors encountered during execution.
+writes the retrieved tracks to a file. It uses Selenium to load and parse
+the webpage, BeautifulSoup to extract track details, and logs its progress
+and any errors encountered during execution.
 """
 
 import logging
@@ -13,8 +12,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
 import time
-import spotipy
-from spotipy.oauth2 import SpotifyOAuth
 from dotenv import load_dotenv
 import os
 
@@ -108,47 +105,3 @@ finally:
     driver.quit()
     logging.info('Driver quit')
     logging.info(f'**** {script_name} ended ****')
-
-# Spotify credentials
-sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
-    client_id=os.getenv('SPOTIPY_CLIENT_ID'),
-    client_secret=os.getenv('SPOTIPY_CLIENT_SECRET'),
-    redirect_uri=os.getenv('SPOTIPY_REDIRECT_URI'),
-    scope='playlist-modify-public'
-))
-
-# Check if the playlist already exists
-playlist_name = 'Open Broadcast Tracks'
-user_id = sp.current_user()['id']
-playlists = sp.user_playlists(user_id)
-playlist_id = None
-
-for playlist in playlists['items']:
-    if playlist['name'] == playlist_name:
-        playlist_id = playlist['id']
-        break
-
-# Create a new playlist if it doesn't exist
-if not playlist_id:
-    playlist = sp.user_playlist_create(user_id, playlist_name, public=True)
-    playlist_id = playlist['id']
-
-# Search for tracks and add them to the playlist
-track_ids = []
-for query in track_queries:
-    offset = 0
-    while True:
-        result = sp.search(q=query, type='track', limit=50, offset=offset)
-        if result['tracks']['items']:
-            for item in result['tracks']['items']:
-                track_id = item['id']
-                track_ids.append(track_id)
-            offset += 50
-        else:
-            break
-
-if track_ids:
-    sp.user_playlist_add_tracks(user_id, playlist_id, track_ids)
-    logging.info(f"Added {len(track_ids)} tracks to the playlist.")
-else:
-    logging.info("No tracks found to add to the playlist.")
