@@ -14,6 +14,7 @@ from bs4 import BeautifulSoup
 import time
 from dotenv import load_dotenv
 import os
+from datetime import datetime
 
 # Set up logging
 logging.basicConfig(
@@ -28,6 +29,9 @@ script_name = 'main.py'
 
 # Log the start of the script
 logging.info(f'**** {script_name} started ****')
+
+# Record the start time
+start_time = datetime.now()
 
 # Load environment variables from .env file
 load_dotenv()
@@ -92,4 +96,10 @@ except Exception as e:
 finally:
     driver.quit()
     logging.info('Driver quit')
+
+    # Calculate and log the total run time
+    end_time = datetime.now()
+    total_run_time = end_time - start_time
+    logging.info(f'Total run time: {total_run_time}')
+
     logging.info(f'**** {script_name} ended ****')
