@@ -65,21 +65,9 @@ try:
     soup = BeautifulSoup(page_source, 'html.parser')
     logging.info('Page source parsed with BeautifulSoup')
 
-    # Write the complete response to a file for debugging
-    with open('response.html', 'w', encoding='utf-8') as file:
-        file.write(page_source)
-    logging.info('Response written to response.html')
-
     # Find all track elements (adjust the selector based on the actual HTML structure)
     tracks = soup.find_all('div', class_='media-row')  # Replace 'div' and 'track' with actual tags/classes
     logging.info(f"Found {len(tracks)} tracks")
-
-    # Write the tracks object to a file for debugging
-    with open('tracks_debug.txt', 'w', encoding='utf-8') as file:
-        for track in tracks:
-            file.write(str(track))
-            file.write('\n\n')
-    logging.info("Tracks written to tracks_debug.txt")
 
     # Extract and write track information to file
     track_queries = []
