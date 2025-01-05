@@ -95,7 +95,10 @@ logging.info(f"Found {len(track_ids)} track IDs")
 for i in range(0, len(track_ids), 100):
     batch = track_ids[i:i + 100]
     retry_request(sp.user_playlist_add_tracks, user_id, playlist_id, batch)
-    logging.info(f"Added {len(batch)} tracks to the playlist.")
+    # logging.info(f"Added {len(batch)} tracks to the playlist.")
+
+# Log the total number of tracks added to the playlist
+logging.info(f"Total number of tracks added to the playlist: {len(track_ids)}")
 
 # Log the end of the script
 logging.info(f"**** {script_name} ended ****")
