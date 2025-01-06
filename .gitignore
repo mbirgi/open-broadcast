@@ -2,7 +2,6 @@
 .cache
 .env
 response.html
-tracks_debug.txt 
 tracks*
 
 # Byte-compiled / optimized / DLL files
