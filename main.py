@@ -10,7 +10,6 @@ from logging.handlers import RotatingFileHandler
 from playwright.sync_api import sync_playwright
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
-import os
 from datetime import datetime
 
 # Set up logging
@@ -57,9 +56,10 @@ def scrape_tracks():
             if new_height == last_height:
                 attempts += 1
                 logging.info(f"No new content loaded. Attempt {attempts}/{max_attempts}")
+                # wait for 10 seconds before trying again
+                page.wait_for_timeout(10000)
             else:
                 attempts = 0
-                # logging.info(f"New content loaded. Resetting attempts.")
             last_height = new_height
             iterations += 1
             logging.info(
