@@ -3,7 +3,7 @@
 .env
 response.html
 tracks_debug.txt 
-tracks.txt
+tracks*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
