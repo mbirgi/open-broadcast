@@ -1,6 +1,6 @@
 # Open Broadcast Tracks Scraper and Spotify Playlist Creator
 
-This Python script scrapes track information from the Open Broadcast website and creates a Spotify playlist with the retrieved tracks. It uses Selenium to load and parse the webpage, BeautifulSoup to extract track details, and Spotipy to interact with the Spotify API.
+This Python script scrapes track information from the Open Broadcast website and creates a Spotify playlist with the retrieved tracks. It uses Playwright to load and parse the webpage, BeautifulSoup to extract track details, and Spotipy to interact with the Spotify API.
 
 ## Features
 - Scrapes track titles and artist names from the Open Broadcast website.
@@ -11,7 +11,7 @@ This Python script scrapes track information from the Open Broadcast website and
 
 ## Requirements
 - Python 3.x
-- Selenium
+- Playwright
 - BeautifulSoup4
 - Spotipy
 - python-dotenv
