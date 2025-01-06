@@ -6,16 +6,14 @@ and any errors encountered during execution.
 """
 
 import logging
-from logging.handlers import RotatingFileHandler
+from logging import FileHandler
 from playwright.sync_api import sync_playwright
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 from datetime import datetime
 
 # Set up logging
-log_handler = RotatingFileHandler(
-    "app.log", maxBytes=100000, backupCount=5
-)
+log_handler = FileHandler("app.log")
 logging.basicConfig(
     handlers=[log_handler],
     level=logging.INFO,
